@@ -20,14 +20,22 @@ echo "     $disk"
 echo ""
 echo "Please verify that the above is ABSOLUTELY correct before continuing!"
 echo "If you're not sure, run \"diskutil list\" to verify."
+echo ""
+echo "Press [ENTER] to continue."
 read a
 
-# Reformat to FAT16
-echo "Reformatting $disk to FAT16"
 sudo diskutil unmount $disk
-sudo newfs_msdos -F 16 -v Canon_DC -b 4096 -c 128 $disk
+
+echo -n "Is this for an SD card that is < 4GB? (Y/n): "
+read -n 1 reformat
+if [ "$reformat" == "Y" ]; then
+  # Reformat to FAT16
+  echo "Reformatting $disk to FAT16"
+  sudo newfs_msdos -F 16 -v Canon_DC -b 4096 -c 128 $disk
+fi
 
 # Extract the boot sector from the disk
+echo ""
 echo "Extracting boot sector as a hex file"
 sudo dd if=$disk of=BootSector.bin bs=512 count=1
 sudo chown $USER BootSector.bin
@@ -37,8 +45,8 @@ echo "BOOTDISK" > bootdisk.txt
 dd if=bootdisk.txt count=8 bs=1 seek=64 of=BootSector.bin conv=notrunc
 
 # Write the modified boot sector back to the disk
-echo "Writing to bootdisk"
-sudo dd if=BootSector.bin of=/dev/disk3s1 bs=512 count=1
+echo "Writing to boot sector"
+sudo dd if=BootSector.bin of=$disk bs=512 count=1
 
 # Mount the disk ready for use
 sudo diskutil mount $disk
