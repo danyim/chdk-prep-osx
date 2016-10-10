@@ -1,7 +1,9 @@
 #!/bin/bash
+set -e # Exit on error
 disk=$1
+
 if  [ -z "$1" ]; then
-  echo "Please provide a device name as an argument, i.e. /dev/disk3s1"
+  echo "Please provide a device name and partition as an argument, i.e. /dev/disk3s1"
   exit 1
 fi
 
