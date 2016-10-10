@@ -1,5 +1,9 @@
 #!/bin/bash
-disk="/dev/disk3s1"
+disk=$1
+if  [ -z "$1" ]; then
+  echo "Please provide a device name as an argument, i.e. /dev/disk3s1"
+  exit 1
+fi
 
 echo ""
 echo "========================================================================="
@@ -22,7 +26,7 @@ sudo diskutil unmount $disk
 sudo newfs_msdos -F 16 -v Canon_DC -b 4096 -c 128 $disk
 
 # Extract the boot sector from the disk
-echo "Extracting boot sector"
+echo "Extracting boot sector as a hex file"
 sudo dd if=$disk of=BootSector.bin bs=512 count=1
 sudo chown $USER BootSector.bin
 
