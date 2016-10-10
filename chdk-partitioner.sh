@@ -3,7 +3,7 @@ set -e # Exit on error
 
 disk=$1
 if  [ -z "$1" ]; then
-  echo "Please provide a device name as an argument, i.e. /dev/disk3"
+  echo "Please provide a disk label as an argument, i.e. /dev/disk3"
   exit 1
 fi
 
